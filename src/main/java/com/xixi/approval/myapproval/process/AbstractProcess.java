@@ -19,7 +19,7 @@ public abstract class AbstractProcess {
 
             updateNode();
         }else {
-            //抛出异常 审批失败
+            //抛出异常 审批失
 
         }
     }
@@ -32,8 +32,8 @@ public abstract class AbstractProcess {
     }
 
     /**
-     * 审批是否通过 true为通过 false为失败，其中可以进行检验
-     * @return
+     *
+     * @return 审批是否通过 true为通过 false为失败，其中可以进行检验
      */
     public abstract Boolean approval();
 
