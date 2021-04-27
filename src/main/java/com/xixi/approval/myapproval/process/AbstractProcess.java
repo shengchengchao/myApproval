@@ -1,5 +1,9 @@
 package com.xixi.approval.myapproval.process;
 
+import com.xixi.approval.myapproval.entity.ApprovalLogEntity;
+
+import java.util.Date;
+
 /**
  * @author shengchengchao
  * @Description
@@ -13,26 +17,24 @@ public abstract class AbstractProcess {
      */
     public void approvalNode(){
         //校验node
+        checkNode();
+        approval();
+        createLog();
+        updateNode();
 
-        if(approval()){
-            //创建日志
-
-            updateNode();
-        }else {
-            //抛出异常 审批失
-
-        }
     }
 
     /**
      * 创建日志
      */
     protected void createLog(){
+        ApprovalLogEntity approvalLogEntity = new ApprovalLogEntity();
+
 
     }
 
     /**
-     *
+     * 审批
      * @return 审批是否通过 true为通过 false为失败，其中可以进行检验
      */
     public abstract Boolean approval();
@@ -48,12 +50,10 @@ public abstract class AbstractProcess {
      */
     public  void rollbackNode(){
 
-        if(rollback()){
-            //创建日志
-
-            //修改链路，进行其他操作
-
-        }
+        checkNode();
+        rollback();
+        createLog();
+        updateNode();
     }
 
     /**

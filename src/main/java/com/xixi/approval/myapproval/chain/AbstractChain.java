@@ -2,6 +2,7 @@ package com.xixi.approval.myapproval.chain;
 
 import com.xixi.approval.myapproval.node.AbstractNode;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -23,6 +24,9 @@ public abstract class AbstractChain {
 
         return null;
     }
+
+
+
 
 
 

@@ -2,6 +2,10 @@ package com.xixi.approval.myapproval.node;
 
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * @author shengchengchao
  * @Description 基础的节点
@@ -38,4 +42,7 @@ public  abstract class AbstractNode {
      * 原因
      */
     private String reason;
+
+
+
 }
