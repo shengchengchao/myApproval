@@ -21,16 +21,13 @@ public class ApprovalConfigEntity extends BaseEntity implements Serializable {
     @TableId(value="ID" ,type = IdType.ID_WORKER_STR)
     @TableField("ID")
     private String id;
-
-
-
-    /** 关联id */
-    @TableField("RELATE_ID")
-    private String relateId;
+    /**配置名称*/
+    @TableField("NAME")
+    private String name;
 
     /** 节点位置 */
-    @TableField("INDEX")
-    private Integer index;
+    @TableField("NODE_INDEX")
+    private Integer nodeIndex;
 
     /** 多个条件用,分割 */
     @TableField("APPROVAL_ROLE")

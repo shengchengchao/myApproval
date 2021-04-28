@@ -1,5 +1,7 @@
 package com.xixi.approval.myapproval.node;
 
+import lombok.Data;
+
 import java.util.List;
 
 /**
@@ -7,11 +9,19 @@ import java.util.List;
  * @Description 该节点内只要有一个通过就可以
  * @createTime 2021/4/26
  */
-public class CountersignNode extends AbstractNode {
+@Data
+public class CountersignNode extends SimpleNode {
 
-    private List<SimpleNode> node;
+    public AbstractNode node;
     /**
      * 完成数
      */
-    private Integer CompleteCount;
+    public Integer completeCount;
+
+
+    public CountersignNode(List<String> applyUser, String type, String status, String relateId, String nodeType, String name, String reason) {
+        super(applyUser,type,status,relateId,nodeType,name,reason);
+        this.completeCount=0;
+    }
+
 }

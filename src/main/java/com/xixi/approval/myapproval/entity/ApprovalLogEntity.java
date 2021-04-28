@@ -33,7 +33,13 @@ public class ApprovalLogEntity extends BaseEntity implements Serializable {
     @TableField("RELATE_ID")
     private String relateId;
 
+    /** 节点索引 */
+    @TableField("NODE_INDEX")
+    private Integer nodeIndex;
 
+    /** 在多节点状态下,子索引数 */
+    @TableField("CHILDREN_IDX")
+    private Integer childrenIdx;
 
 
 }

@@ -1,5 +1,7 @@
 package com.xixi.approval.myapproval.controller;
 
+import com.xixi.approval.myapproval.chain.MyApprovalChain;
+import com.xixi.approval.myapproval.node.AbstractNode;
 import com.xixi.approval.myapproval.service.TestService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,7 +22,7 @@ public class TestController {
 
 
     @Autowired
-    private TestService testService;
+    private MyApprovalChain approvalChain;
     /**
      * @Description: 字典项启用禁用
      * @Author: shengchengchao
@@ -29,6 +31,7 @@ public class TestController {
     @ApiOperation(value = "测试")
     @PostMapping("/testinit")
     public void testInit(){
-        testService.test();
+        AbstractNode abstractNode = approvalChain.approvalChain("2");
+        System.out.println(abstractNode.getNodeIdx());
     }
 }

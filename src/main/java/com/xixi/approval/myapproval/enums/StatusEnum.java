@@ -5,7 +5,7 @@ package com.xixi.approval.myapproval.enums;
  * @Description
  * @createTime 2021/4/26
  */
-public enum statusEnum {
+public enum StatusEnum {
     /**
      *  可以进行审批操作的简单节点是Ready状态
      */
@@ -39,7 +39,7 @@ public enum statusEnum {
         return statusCn;
     }
 
-    statusEnum(String status, String statusCn) {
+    StatusEnum(String status, String statusCn) {
         this.status = status;
         this.statusCn = statusCn;
     }

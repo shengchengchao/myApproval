@@ -26,4 +26,7 @@ public class TestEntity  extends BaseEntity  implements Serializable {
     private String id;
 
 
+    /** 版本 */
+    @TableField("VERSION")
+    private Integer version;
 }

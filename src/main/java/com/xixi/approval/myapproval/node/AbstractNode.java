@@ -1,10 +1,8 @@
 package com.xixi.approval.myapproval.node;
 
+import lombok.Builder;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * @author shengchengchao
@@ -12,37 +10,57 @@ import java.util.List;
  * @createTime 2021/4/26
  */
 @Data
-public  abstract class AbstractNode {
+public  class AbstractNode {
 
     /**
      * 审批类型
      */
-    private String type;
+    protected String type;
 
     /**
      * 状态
      */
-    private String status;
+    protected String status;
 
     /**
      * 关联id
      */
-    private String relateId;
+    protected String relateId;
     /**
      * 节点类型
      */
-    private String nodeType;
+    protected String nodeType;
+    protected String name;
 
     /**
      * 节点顺序
      */
-    private Integer nodeIdx;
+    protected Integer nodeIdx;
 
     /**
      * 原因
      */
-    private String reason;
+    protected String reason;
 
+    protected AbstractNode nextNode;
+
+
+    public AbstractNode(String type, String status, String relateId, String nodeType, String name, String reason) {
+        this.type = type;
+        this.status = status;
+        this.relateId = relateId;
+        this.nodeType = nodeType;
+        this.name = name;
+        this.reason = reason;
+    }
+
+    public AbstractNode() {
+    }
+
+    public void setNextNode(AbstractNode node){
+        node.nodeIdx = nodeIdx+1;
+        this.nextNode = node;
+    }
 
 
 }

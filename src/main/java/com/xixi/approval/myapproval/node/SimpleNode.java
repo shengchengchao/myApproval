@@ -15,5 +15,12 @@ public class SimpleNode extends AbstractNode {
     /**
      * 审批人名称
      */
-    private List<String> applyUser;
+    protected List<String> applyUser;
+
+
+    public SimpleNode(List<String> applyUser, String type, String status, String relateId, String nodeType, String name, String reason) {
+       super(type,status,relateId,nodeType,name,reason);
+       this.applyUser=applyUser;
+    }
+
 }
