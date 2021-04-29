@@ -13,15 +13,13 @@ import java.util.List;
 public class CountersignNode extends SimpleNode {
 
     public AbstractNode node;
-    /**
-     * 完成数
-     */
-    public Integer completeCount;
 
 
-    public CountersignNode(List<String> applyUser, String type, String status, String relateId, String nodeType, String name, String reason) {
-        super(applyUser,type,status,relateId,nodeType,name,reason);
-        this.completeCount=0;
+
+    public CountersignNode(List<String> applyUser, String type, String status,String nodeType, String name, String reason,String completeUserId
+            ,Integer childrenIdx,Integer nodeIndex) {
+        super(applyUser,type,status,nodeType,name,reason,completeUserId,childrenIdx,nodeIndex);
+
     }
 
 }

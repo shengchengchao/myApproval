@@ -18,8 +18,8 @@ public class SimpleNode extends AbstractNode {
     protected List<String> applyUser;
 
 
-    public SimpleNode(List<String> applyUser, String type, String status, String relateId, String nodeType, String name, String reason) {
-       super(type,status,relateId,nodeType,name,reason);
+    public SimpleNode(List<String> applyUser, String type, String status,String nodeType, String name, String reason,String completeUser,Integer childrenIdx,Integer nodeIndex) {
+       super(type,status,nodeType,name,reason,completeUser,nodeIndex,childrenIdx);
        this.applyUser=applyUser;
     }
 

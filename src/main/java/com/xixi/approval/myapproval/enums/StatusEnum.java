@@ -25,7 +25,11 @@ public enum StatusEnum {
     /**
      * 回滚
      */
-    ROLLBACK("ROLLBACK","回滚")
+    ROLLBACK("ROLLBACK","驳回"),
+    /**
+     * 回滚
+     */
+    SKIP("SKIP","跳过")
     ;
 
     private String status;

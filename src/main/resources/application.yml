@@ -1,7 +1,7 @@
 spring:
   datasource:
     name: approval
-    url: jdbc:mysql://localhost:3306/approval?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false
+    url: jdbc:mysql://localhost:3306/approval?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: 12345678
     type: com.alibaba.druid.pool.DruidDataSource

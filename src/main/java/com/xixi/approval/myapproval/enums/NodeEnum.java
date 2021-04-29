@@ -11,7 +11,7 @@ public enum  NodeEnum {
     /**并行节点*/
     PARALLEL("PARALLEL","并行节点"),
     /**会签节点*/
-    COUNTERSIGN("COUNTERSIN","会签节点"),
+    COUNTERSIGN("COUNTERSIGN","会签节点"),
     ;
 
     private String type;

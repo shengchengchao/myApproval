@@ -26,4 +26,12 @@ public class MyApprovalChain extends AbstractApprovalChain {
 
         return one.getVersion();
     }
+
+    /**
+     * 加载节点处理类
+     */
+    @Override
+    public void init() {
+        super.init();
+    }
 }

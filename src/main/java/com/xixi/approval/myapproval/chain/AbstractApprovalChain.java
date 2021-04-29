@@ -1,20 +1,17 @@
 package com.xixi.approval.myapproval.chain;
 
-import cn.hutool.core.collection.CollectionUtil;
+import com.xixi.approval.myapproval.dto.ApprovalDTO;
 import com.xixi.approval.myapproval.entity.ApprovalConfigEntity;
 import com.xixi.approval.myapproval.entity.ApprovalLogEntity;
-import com.xixi.approval.myapproval.enums.NodeEnum;
+import com.xixi.approval.myapproval.enums.StatusEnum;
+import com.xixi.approval.myapproval.exception.ApprovalException;
 import com.xixi.approval.myapproval.node.AbstractNode;
-import com.xixi.approval.myapproval.process.AbstractNodeProcess;
-import com.xixi.approval.myapproval.process.CountersignNodeProcess;
-import com.xixi.approval.myapproval.process.ParallelNodeProcess;
-import com.xixi.approval.myapproval.process.SimpleNodeProcess;
+import com.xixi.approval.myapproval.process.*;
 import com.xixi.approval.myapproval.service.ApprovalConfigService;
 import com.xixi.approval.myapproval.service.ApprovalLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,32 +20,15 @@ import java.util.stream.Collectors;
  * @Description
  * @createTime 2021/4/26
  */
-public abstract class AbstractApprovalChain {
+public abstract class AbstractApprovalChain  extends AbstractProcess {
 
     @Autowired
     private ApprovalConfigService approvalConfigService;
     @Autowired
     private ApprovalLogService approvalLogService;
 
-    @Autowired
-    private SimpleNodeProcess simpleNodeProcess;
-    @Autowired
-    private ParallelNodeProcess parallelNodeProcess;
-    @Autowired
-    private CountersignNodeProcess countersignNodeProcess;
 
-    Map<String, AbstractNodeProcess> processMap;
 
-    /**
-     * 初始化 策略模式
-     */
-    @PostConstruct
-    public void init(){
-        processMap = new HashMap<>(16);
-        processMap.put(NodeEnum.SIMPLE.getType(),simpleNodeProcess);
-        processMap.put(NodeEnum.PARALLEL.getType(),parallelNodeProcess);
-        processMap.put(NodeEnum.COUNTERSIGN.getType(),countersignNodeProcess);
-    }
 
     /**
      *  返回一个审批链 包含当前处理到的节点
@@ -61,16 +41,14 @@ public abstract class AbstractApprovalChain {
         //查询日志 判断处理到了哪一步
         List<ApprovalLogEntity> log = getLog(relateId);
 
-        AbstractNode abstractNodes = calculateChain(config, log);
-
-        return abstractNodes;
+        return calculateChain(config, log);
     }
 
     /**
      * 计算出审批链
      * @param config 配置的节点
      * @param log 日志
-     * @return
+     * @return AbstractNode 节点链
      */
     protected  AbstractNode calculateChain(List<ApprovalConfigEntity> config, List<ApprovalLogEntity> log){
         AbstractNode defaultHeadNode = getDefaultHeadNode();
@@ -94,7 +72,7 @@ public abstract class AbstractApprovalChain {
         //装配节点
         for (Map.Entry<ApprovalConfigEntity, List<ApprovalConfigEntity>> entry : sortMap.entrySet()) {
             ApprovalConfigEntity key = entry.getKey();
-            List<ApprovalLogEntity> collect = log.stream().filter(x -> x.getNodeIndex().equals(key.getNodeIndex())).collect(Collectors.toList());
+            List<ApprovalLogEntity> collect = log.stream().filter(x -> x.getNodeIndex().equals(key.getNodeIndex())).sorted(Comparator.comparing(ApprovalLogEntity::getChildrenIdx)).collect(Collectors.toList());
             AbstractNodeProcess process = processMap.get(key.getNodeType());
             AbstractNode node = process.getNode(entry.getValue(), collect);
             cur.setNextNode(node);
@@ -109,19 +87,19 @@ public abstract class AbstractApprovalChain {
 
     /**
      * 添加前置节点 由子类自定义实现
-     * @param cur
+     * @param cur 当前节点
      */
     protected  void addBeforeNode(AbstractNode cur){ }
 
     /**
      * 后置节点 由子类自定义实现
-     * @param cur
+     * @param cur 当前节点
      */
     protected  void addAfterNode(AbstractNode cur){ }
 
     /**
      * 创建一个默认的头节点
-     * @return
+     * @return AbstractNode 头节点
      */
     protected  AbstractNode getDefaultHeadNode(){
         return simpleNodeProcess.createDefaultNode();
@@ -129,18 +107,17 @@ public abstract class AbstractApprovalChain {
 
     /**
      * 得到配置的节点
-     * @param version
-     * @return
+     * @param version 版本
+     * @return 配置集合
      */
     public List<ApprovalConfigEntity> getConfig(Integer version){
-        return approvalConfigService.lambdaQuery()
-                .eq(ApprovalConfigEntity::getVersion, version).list();
+        return approvalConfigService.lambdaQuery().eq(ApprovalConfigEntity::getVersion, version).list();
     }
 
     /**
      * 得到日志的节点
-     * @param relateId
-     * @return
+     * @param relateId 关联id
+     * @return 日志集合
      */
     public List<ApprovalLogEntity> getLog(String relateId){
         return approvalLogService.lambdaQuery().eq(ApprovalLogEntity::getRelateId, relateId).list();
@@ -153,5 +130,46 @@ public abstract class AbstractApprovalChain {
      */
     public abstract Integer getVersion(String relateId);
 
+    /**
+     * 得到当前节点 注意这里只得到父节点 不对子节点进去判断
+     * @param relateId 关联id
+     * @return 当前节点
+     */
+    public AbstractNode getCurrentNode(String relateId){
+        AbstractNode abstractNode = approvalChain(relateId);
+        ApprovalLogEntity currentIndex = getCurrentIndex(relateId);
+        AbstractNode cur =abstractNode;
+        while (cur!=null){
+            if(cur.getNodeIdx().equals(currentIndex.getNodeIndex())){
+                return cur;
+            }
+            cur = cur.getNextNode();
+        }
+        return abstractNode;
+    }
 
+    /**
+     * 从日志中得到当前节点
+     * @param relateId 关联id
+     * @return 最新日志
+     */
+    protected  ApprovalLogEntity getCurrentIndex(String relateId){
+        List<ApprovalLogEntity> list = approvalLogService.lambdaQuery().eq(ApprovalLogEntity::getRelateId, relateId)
+                .and(i->i.eq(ApprovalLogEntity::getStatus, StatusEnum.READY.getStatus()).or().eq(ApprovalLogEntity::getStatus, StatusEnum.ROLLBACK.getStatus()))
+                .orderByDesc(ApprovalLogEntity::getNodeIndex, ApprovalLogEntity::getChildrenIdx).list();
+        return CollectionUtils.isEmpty(list) ? new ApprovalLogEntity():list.get(0);
+    }
+
+    public Boolean approval(ApprovalDTO approvalDTO) throws ApprovalException {
+        AbstractNode abstractNode = getCurrentNode(approvalDTO.getRelated());
+        CommonApprovalProcess commonApprovalProcess = processMap.get(abstractNode.getNodeType());
+        return commonApprovalProcess.approval(approvalDTO,abstractNode);
+    }
+
+
+    public Boolean rollback(ApprovalDTO approvalDTO) throws ApprovalException {
+        AbstractNode abstractNode = getCurrentNode(approvalDTO.getRelated());
+        CommonApprovalProcess commonApprovalProcess = processMap.get(abstractNode.getNodeType());
+        return commonApprovalProcess.rollback(approvalDTO,abstractNode);
+    }
 }

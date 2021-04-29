@@ -22,16 +22,14 @@ public  class AbstractNode {
      */
     protected String status;
 
-    /**
-     * 关联id
-     */
-    protected String relateId;
+
     /**
      * 节点类型
      */
     protected String nodeType;
     protected String name;
 
+    protected String completeUser;
     /**
      * 节点顺序
      */
@@ -44,14 +42,21 @@ public  class AbstractNode {
 
     protected AbstractNode nextNode;
 
+    /**
+     * 子节点顺序
+     */
+    protected Integer childrenIdx;
 
-    public AbstractNode(String type, String status, String relateId, String nodeType, String name, String reason) {
+
+    public AbstractNode(String type, String status, String nodeType, String name, String reason,String completeUser,Integer nodeIdx,Integer childrenIdx) {
         this.type = type;
         this.status = status;
-        this.relateId = relateId;
         this.nodeType = nodeType;
         this.name = name;
         this.reason = reason;
+        this.completeUser = completeUser;
+        this.nodeIdx = nodeIdx;
+        this.childrenIdx = childrenIdx;
     }
 
     public AbstractNode() {
@@ -63,4 +68,8 @@ public  class AbstractNode {
     }
 
 
+    public void setChildNextNode(AbstractNode node){
+        node.childrenIdx = childrenIdx+1;
+        this.nextNode = node;
+    }
 }

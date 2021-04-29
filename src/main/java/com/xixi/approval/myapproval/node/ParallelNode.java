@@ -16,13 +16,13 @@ public class ParallelNode extends SimpleNode {
      * 内部节点
      */
     public AbstractNode node;
-    /**
-     * 完成数
-     */
-    public Integer completeCount;
 
-    public ParallelNode(List<String> applyUser, String type, String status, String relateId, String nodeType, String name, String reason) {
-        super(applyUser, type, status, relateId, nodeType, name, reason);
-        this.completeCount=0;
+
+
+
+    public ParallelNode(List<String> applyUser, String type, String status,String nodeType, String name, String reason,String completeUserId
+            ,Integer childrenIdx,Integer nodeIndex) {
+        super(applyUser, type, status, nodeType, name, reason,completeUserId,childrenIdx,nodeIndex);
+
     }
 }
