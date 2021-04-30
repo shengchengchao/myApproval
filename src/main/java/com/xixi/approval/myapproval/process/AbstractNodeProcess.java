@@ -26,6 +26,24 @@ public abstract class AbstractNodeProcess extends AbstractProcess implements Abs
 
 
 
+    /**
+     *  审批
+     * @param approvalDTO approvalDTO
+     * @param currentNode currentNode
+     * @return true
+     * @throws ApprovalException ApprovalException
+     */
+    abstract Boolean approval(ApprovalDTO approvalDTO, AbstractNode currentNode) throws ApprovalException;
+
+
+    /**
+     *  驳回
+     * @param approvalDTO approvalDTO
+     * @param currentNode currentNode
+     * @return true
+     * @throws ApprovalException ApprovalException
+     */
+    abstract Boolean rollback(ApprovalDTO approvalDTO,AbstractNode currentNode) throws ApprovalException;
 
     public  AbstractNode createDefaultNode(){
         AbstractNode abstractNode = new AbstractNode();

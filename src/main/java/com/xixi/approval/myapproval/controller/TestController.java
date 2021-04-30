@@ -82,4 +82,8 @@ public class TestController {
         System.out.println(test.size());
     }
 
+    public static void main(String[] args) {
+        boolean[] booleans = new boolean[2];
+        System.out.println(booleans[1]);
+    }
 }
