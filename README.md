@@ -1,6 +1,6 @@
 # 简易工作流引擎
 
-
+[sql脚本](https://github.com/shengchengchao/myApproval/blob/master/approval.sql)
 
 ## 目前已支持的部分：
 
