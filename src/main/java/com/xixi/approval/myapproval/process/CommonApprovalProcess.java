@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @createTime 2021/4/28
  */
 @Component
-public abstract class CommonApprovalProcess extends AbstractNodeProcess  implements AbstractLogProcess{
+public abstract class CommonApprovalProcess extends AbstractNodeProcess {
 
 
 
