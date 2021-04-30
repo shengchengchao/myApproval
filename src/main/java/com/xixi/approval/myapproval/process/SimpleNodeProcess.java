@@ -53,7 +53,7 @@ public class SimpleNodeProcess extends CommonApprovalProcess {
         approvalLogService.lambdaUpdate().eq(ApprovalLogEntity::getRelateId,approvalDTO.getRelated())
                 .eq(ApprovalLogEntity::getNodeIndex,currentNode.getNodeIdx()).remove();
         ApprovalLogEntity approvalLogEntity = new ApprovalLogEntity("", StatusEnum.NORMAL.getStatus(),approvalDTO.getRelated()
-                ,currentNode.getNodeIdx(),0,approvalDTO.getApprovalUserDTO().getId());
+                ,currentNode.getNodeIdx(),0,approvalDTO.getApprovalUserDTO().getId(),approvalDTO.getType());
         list.add(approvalLogEntity);
         AbstractNode nextNode = currentNode.getNextNode();
         if(nextNode !=null){
@@ -68,7 +68,7 @@ public class SimpleNodeProcess extends CommonApprovalProcess {
         approvalLogService.lambdaUpdate().eq(ApprovalLogEntity::getRelateId,approvalDTO.getRelated())
                 .eq(ApprovalLogEntity::getNodeIndex,currentNode.getNodeIdx()).remove();
         ApprovalLogEntity approvalLogEntity = new ApprovalLogEntity(approvalDTO.getRollbackReason(),
-                StatusEnum.ROLLBACK.getStatus(),approvalDTO.getRelated(),currentNode.getNodeIdx(),0,approvalDTO.getApprovalUserDTO().getId());
+                StatusEnum.ROLLBACK.getStatus(),approvalDTO.getRelated(),currentNode.getNodeIdx(),0,approvalDTO.getApprovalUserDTO().getId(),approvalDTO.getType());
 
         approvalLogService.save(approvalLogEntity);
     }
@@ -81,7 +81,7 @@ public class SimpleNodeProcess extends CommonApprovalProcess {
     @Override
     public List<ApprovalLogEntity> saveNextNodeLog(AbstractNode currentNode,ApprovalDTO approvalDTO) {
         ApprovalLogEntity next = new ApprovalLogEntity("", StatusEnum.READY.getStatus()
-                , approvalDTO.getRelated(), currentNode.getNodeIdx(), 0,"");
+                , approvalDTO.getRelated(), currentNode.getNodeIdx(), 0,"",approvalDTO.getType());
         return Lists.newArrayList(next);
     }
 

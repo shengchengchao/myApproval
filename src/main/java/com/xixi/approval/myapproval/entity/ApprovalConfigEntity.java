@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -42,10 +43,14 @@ public class ApprovalConfigEntity extends BaseEntity implements Serializable {
     private Integer version;
 
 
-
     /** 在多节点状态下,子索引数 */
     @TableField("CHILDREN_IDX")
     private Integer childrenIdx;
+    /** 审批类型 */
+    @TableField("APPROVAL_TYPE")
+    private String approvalType;
 
+    @TableField(exist = false)
+    List<ApprovalConfigEntity> list;
 
 }

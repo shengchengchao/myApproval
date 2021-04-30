@@ -172,4 +172,13 @@ public abstract class AbstractApprovalChain  extends AbstractProcess {
         CommonApprovalProcess commonApprovalProcess = processMap.get(abstractNode.getNodeType());
         return commonApprovalProcess.rollback(approvalDTO,abstractNode);
     }
+
+    public List<ApprovalConfigEntity> getConfigList(String type){
+        return approvalConfigService.approvalConfigList(type);
+    }
+
+    public void setApprovalConfig(List<ApprovalConfigEntity> res){
+        approvalConfigService.setApprovalConfig(res);
+    }
+
 }

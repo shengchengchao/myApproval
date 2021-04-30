@@ -1,7 +1,6 @@
 package com.xixi.approval.myapproval.process;
 
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.ObjectUtil;
 import com.google.common.collect.Lists;
 import com.xixi.approval.myapproval.dto.ApprovalDTO;
 import com.xixi.approval.myapproval.entity.ApprovalConfigEntity;
@@ -106,7 +105,7 @@ public class ParallelNodeProcess extends CommonApprovalProcess {
         ParallelNode node = (ParallelNode) currentNode;
         AbstractNode childrenNode = node.getNode();
         ApprovalLogEntity log = new ApprovalLogEntity("", StatusEnum.NORMAL.getStatus(), approvalDTO.getRelated(),
-                currentNode.getNodeIdx(), 0,approvalDTO.getApprovalUserDTO().getId());
+                currentNode.getNodeIdx(), 0,approvalDTO.getApprovalUserDTO().getId(),approvalDTO.getType());
         list.add(log);
         //这里统计的是 找出来一个节点 能符合条件的 就将这个节点设为通过 其他节点设置为跳过
         while (childrenNode!=null){
@@ -114,7 +113,7 @@ public class ParallelNodeProcess extends CommonApprovalProcess {
                     childrenNode.getChildrenIdx().equals(children.getChildrenIdx()) ? StatusEnum.NORMAL.getStatus():StatusEnum.SKIP.getStatus(),
                     approvalDTO.getRelated(), childrenNode.getNodeIdx(),
                     childrenNode.getChildrenIdx()
-                    ,approvalDTO.getApprovalUserDTO().getId());
+                    ,approvalDTO.getApprovalUserDTO().getId(),approvalDTO.getType());
             list.add(approvalLog);
             childrenNode = childrenNode.getNextNode();
         }
@@ -134,15 +133,16 @@ public class ParallelNodeProcess extends CommonApprovalProcess {
                 .eq(ApprovalLogEntity::getNodeIndex,currentNode.getNodeIdx()).remove();
         List<ApprovalLogEntity> list = new ArrayList<>();
         ParallelNode node = (ParallelNode) currentNode;
-        ApprovalLogEntity log = new ApprovalLogEntity("",
-                StatusEnum.ROLLBACK.getStatus(), approvalDTO.getRelated(), currentNode.getNodeIdx(), node.getChildrenIdx(),approvalDTO.getApprovalUserDTO().getId());
+        ApprovalLogEntity log = new ApprovalLogEntity("", StatusEnum.ROLLBACK.getStatus(), approvalDTO.getRelated(),
+                currentNode.getNodeIdx(), node.getChildrenIdx(),approvalDTO.getApprovalUserDTO().getId(),approvalDTO.getType());
         list.add(log);
 
         AbstractNode childrenNode = node.getNode();
         while (childrenNode!=null){
             ApprovalLogEntity approvalLog = new ApprovalLogEntity(childrenNode.getNodeIdx().equals(node.getNodeIdx()) ?approvalDTO.getRollbackReason():"",
                     childrenNode.getNodeIdx().equals(children.getNodeIdx()) ? StatusEnum.ROLLBACK.getStatus():StatusEnum.SKIP.getStatus(),
-                    approvalDTO.getRelated(), childrenNode.getNodeIdx(), childrenNode.getChildrenIdx(),approvalDTO.getApprovalUserDTO().getId());
+                    approvalDTO.getRelated(), childrenNode.getNodeIdx(),
+                    childrenNode.getChildrenIdx(),approvalDTO.getApprovalUserDTO().getId(),approvalDTO.getType());
             list.add(approvalLog);
             childrenNode = childrenNode.getNextNode();
         }
@@ -160,12 +160,12 @@ public class ParallelNodeProcess extends CommonApprovalProcess {
         List<ApprovalLogEntity> list = new ArrayList<>();
         ParallelNode parallel = (ParallelNode) currentNode;
         ApprovalLogEntity log = new ApprovalLogEntity("", StatusEnum.READY.getStatus(),
-                approvalDTO.getRelated(), parallel.getNodeIdx(), parallel.getNodeIdx(),"");
+                approvalDTO.getRelated(), parallel.getNodeIdx(), parallel.getNodeIdx(),"",approvalDTO.getType());
         list.add(log);
         AbstractNode childrenNode = parallel.getNode();
         while (childrenNode!=null){
             ApprovalLogEntity approvalLog = new ApprovalLogEntity("", StatusEnum.READY.getStatus(),
-                    approvalDTO.getRelated(), childrenNode.getNodeIdx(), childrenNode.getChildrenIdx(),"");
+                    approvalDTO.getRelated(), childrenNode.getNodeIdx(), childrenNode.getChildrenIdx(),"",approvalDTO.getType());
             list.add(approvalLog);
             childrenNode = childrenNode.getNextNode();
         }

@@ -5,6 +5,7 @@ import com.xixi.approval.myapproval.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
 /**
  * @author shengchengchao
  * @Description
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 public class MyApprovalChain extends AbstractApprovalChain {
     @Autowired
     private TestService testService;
+
 
     /**
      * 得到审批版本
@@ -34,4 +36,7 @@ public class MyApprovalChain extends AbstractApprovalChain {
     public void init() {
         super.init();
     }
+
+
+
 }

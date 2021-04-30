@@ -2,6 +2,7 @@ package com.xixi.approval.myapproval.controller;
 
 import com.xixi.approval.myapproval.chain.MyApprovalChain;
 import com.xixi.approval.myapproval.dto.ApprovalDTO;
+import com.xixi.approval.myapproval.entity.ApprovalConfigEntity;
 import com.xixi.approval.myapproval.exception.ApprovalException;
 import com.xixi.approval.myapproval.node.AbstractNode;
 import io.swagger.annotations.Api;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author shengchengchao
@@ -67,4 +70,16 @@ public class TestController {
             e.printStackTrace();
         }
     }
+    /**
+     * @Description: 1
+     * @Author: shengchengchao
+     * @Date: 2020/4/8
+     */
+    @ApiOperation(value = "测试4")
+    @PostMapping("/testc")
+    public void testc(){
+        List<ApprovalConfigEntity> test = approvalChain.getConfigList("TEST");
+        System.out.println(test.size());
+    }
+
 }

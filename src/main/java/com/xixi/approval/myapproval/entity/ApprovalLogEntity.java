@@ -45,13 +45,18 @@ public class ApprovalLogEntity extends BaseEntity implements Serializable {
     @TableField("USER_ID")
     private String userId;
 
-    public ApprovalLogEntity(String reason, String status, String relateId, Integer nodeIndex, Integer childrenIdx,String userId) {
+    /** 审批类型 */
+    @TableField("APPROVAL_TYPE")
+    private String approvalType;
+
+    public ApprovalLogEntity(String reason, String status, String relateId, Integer nodeIndex, Integer childrenIdx,String userId,String approvalType) {
         this.reason = reason;
         this.status = status;
         this.relateId = relateId;
         this.nodeIndex = nodeIndex;
         this.childrenIdx = childrenIdx;
         this.userId = userId;
+        this.approvalType = approvalType;
     }
 
     public ApprovalLogEntity() {

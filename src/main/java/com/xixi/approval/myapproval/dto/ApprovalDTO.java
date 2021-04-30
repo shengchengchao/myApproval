@@ -17,4 +17,6 @@ public class ApprovalDTO implements Serializable {
     private ApprovalUserDTO approvalUserDTO;
 
     private String rollbackReason;
+
+    private String type;
 }

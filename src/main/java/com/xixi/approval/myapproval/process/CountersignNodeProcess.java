@@ -95,7 +95,7 @@ public class CountersignNodeProcess extends CommonApprovalProcess {
                 .eq(ApprovalLogEntity::getNodeIndex,currentNode.getNodeIdx()).remove();
         //如果当前节点没有下一个节点的话 头节点要变成审批完成
         ApprovalLogEntity log = new ApprovalLogEntity("", ObjectUtil.isNull(node.getNextNode())?StatusEnum.NORMAL.getStatus():StatusEnum.READY.getStatus(), approvalDTO.getRelated(),currentNode.getNodeIdx(),
-                currentNode.getChildrenIdx(),approvalDTO.getApprovalUserDTO().getId());
+                currentNode.getChildrenIdx(),approvalDTO.getApprovalUserDTO().getId(),approvalDTO.getType());
         list.add(log);
         while (childrenNode!=null){
             String status = StatusEnum.FUTURE.getStatus();
@@ -105,7 +105,7 @@ public class CountersignNodeProcess extends CommonApprovalProcess {
                 status=StatusEnum.READY.getStatus();
             }
             ApprovalLogEntity approvalLog = new ApprovalLogEntity("", status, approvalDTO.getRelated(),currentNode.getNodeIdx(),
-                    childrenNode.getChildrenIdx(),approvalDTO.getApprovalUserDTO().getId());
+                    childrenNode.getChildrenIdx(),approvalDTO.getApprovalUserDTO().getId(),approvalDTO.getType());
             list.add(approvalLog);
             childrenNode=childrenNode.getNextNode();
         }
@@ -126,9 +126,9 @@ public class CountersignNodeProcess extends CommonApprovalProcess {
                 .and(i->i.eq(ApprovalLogEntity::getChildrenIdx,node.getChildrenIdx()).or().eq(ApprovalLogEntity::getChildrenIdx,0))
                 .remove();
         ApprovalLogEntity approvalLog = new ApprovalLogEntity(approvalDTO.getRollbackReason(), StatusEnum.ROLLBACK.getStatus()
-                , approvalDTO.getRelated(), currentNode.getNodeIdx(), node.getChildrenIdx(),approvalDTO.getApprovalUserDTO().getId());
+                , approvalDTO.getRelated(), currentNode.getNodeIdx(), node.getChildrenIdx(),approvalDTO.getApprovalUserDTO().getId(),approvalDTO.getType());
         ApprovalLogEntity fatherLog = new ApprovalLogEntity("", StatusEnum.ROLLBACK.getStatus()
-                , approvalDTO.getRelated(), currentNode.getNodeIdx(), 0,approvalDTO.getApprovalUserDTO().getId());
+                , approvalDTO.getRelated(), currentNode.getNodeIdx(), 0,approvalDTO.getApprovalUserDTO().getId(),approvalDTO.getType());
         List<ApprovalLogEntity> list = Lists.newArrayList(fatherLog, approvalLog);
         approvalLogService.saveBatch(list);
     }
@@ -142,14 +142,14 @@ public class CountersignNodeProcess extends CommonApprovalProcess {
     public List<ApprovalLogEntity> saveNextNodeLog(AbstractNode currentNode,ApprovalDTO approvalDTO) {
         List<ApprovalLogEntity> list = new ArrayList<>();
         ApprovalLogEntity log = new ApprovalLogEntity("",StatusEnum.READY.getStatus()
-                , approvalDTO.getRelated(), currentNode.getNodeIdx(), currentNode.getChildrenIdx(),"");
+                , approvalDTO.getRelated(), currentNode.getNodeIdx(), currentNode.getChildrenIdx(),"",approvalDTO.getType());
         list.add(log);
 
         boolean flag =true;
         AbstractNode node = ((CountersignNode) currentNode).getNode();
         while (node!=null){
             ApprovalLogEntity approvalLog = new ApprovalLogEntity("",flag? StatusEnum.READY.getStatus(): StatusEnum.FUTURE.getStatus()
-                    , approvalDTO.getRelated(), currentNode.getNodeIdx(), node.getChildrenIdx(),"");
+                    , approvalDTO.getRelated(), currentNode.getNodeIdx(), node.getChildrenIdx(),"",approvalDTO.getType());
             list.add(approvalLog);
             node=node.getNextNode();
             flag=false;
