@@ -86,9 +86,41 @@ public class MyapprpvalTest {
         assertThat(node.getNodeType()).isEqualTo("SIMPLE");
     }
 
+    /**
+     * 进行审批
+     */
+    @Test
+    public void ApprovalNode() throws ApprovalException {
+        List<TestEntity> list = testService.lambdaQuery().eq(TestEntity::getVersion, version)
+                .list();
+        assertThat(list).isNotEmpty();
+        for (int i=1;i<4;i++){
+             approvalNode(i,list.get(0).getId());
+        }
+        rollBackNode();
+    }
 
 
+    public void rollBackNode() throws ApprovalException {
+        ApprovalDTO approvalDTO = getApprovalDTO(3);
+        approvalDTO.setType(OperateEnum.ROLLBACK.getOperate());
+        approvalDTO.setRollbackReason("驳回");
+        approvalChain.rollback(approvalDTO);
+    }
 
+    public void approvalNode(Integer i,String id){
+        ApprovalDTO approvalDTO = getApprovalDTO(i);
+        try {
+            AbstractNode currentNode = approvalChain.getCurrentNode(id);
+            assertThat(currentNode.getNodeIdx()).isEqualTo(i);
+            approvalChain.approval(approvalDTO);
+            currentNode = approvalChain.getCurrentNode(id);
+            assertThat(currentNode.getStatus()).isEqualTo(StatusEnum.READY.getStatus());
+        } catch (ApprovalException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     @Test
     public void currentNode(){
@@ -97,6 +129,16 @@ public class MyapprpvalTest {
     }
 
 
+    public ApprovalDTO getApprovalDTO(Integer i){
+        ApprovalDTO approvalDTO = new ApprovalDTO();
+        approvalDTO.setRelated("1400326214150234114");
+        approvalDTO.setType(OperateEnum.APPROVAL.getOperate());
+        ApprovalUserDTO approvalUserDTO = new ApprovalUserDTO();
+        approvalUserDTO.setId("1");
+        approvalUserDTO.setCondition(i.toString());
+        approvalDTO.setApprovalUserDTO(approvalUserDTO);
+        return approvalDTO;
+    }
     /**
      * 创建简单节点
      * @param i  节点位置
