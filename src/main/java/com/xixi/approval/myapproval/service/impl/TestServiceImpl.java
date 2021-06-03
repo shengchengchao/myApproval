@@ -15,10 +15,5 @@ import org.springframework.transaction.annotation.Transactional;
 public class TestServiceImpl extends ServiceImpl<TestMapper, TestEntity> implements TestService {
 
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void test() {
-        TestEntity testEntity = new TestEntity();
-        this.save(testEntity);
-    }
+
 }

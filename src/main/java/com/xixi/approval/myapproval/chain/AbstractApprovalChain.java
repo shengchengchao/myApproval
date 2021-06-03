@@ -3,6 +3,7 @@ package com.xixi.approval.myapproval.chain;
 import com.xixi.approval.myapproval.dto.ApprovalDTO;
 import com.xixi.approval.myapproval.entity.ApprovalConfigEntity;
 import com.xixi.approval.myapproval.entity.ApprovalLogEntity;
+import com.xixi.approval.myapproval.enums.NodeEnum;
 import com.xixi.approval.myapproval.enums.StatusEnum;
 import com.xixi.approval.myapproval.exception.ApprovalException;
 import com.xixi.approval.myapproval.node.AbstractNode;
@@ -141,6 +142,7 @@ public abstract class AbstractApprovalChain  extends AbstractProcess {
         AbstractNode cur =abstractNode;
         while (cur!=null){
             if(cur.getNodeIdx().equals(currentIndex.getNodeIndex())){
+
                 return cur;
             }
             cur = cur.getNextNode();
@@ -155,7 +157,8 @@ public abstract class AbstractApprovalChain  extends AbstractProcess {
      */
     protected  ApprovalLogEntity getCurrentIndex(String relateId){
         List<ApprovalLogEntity> list = approvalLogService.lambdaQuery().eq(ApprovalLogEntity::getRelateId, relateId)
-                .and(i->i.eq(ApprovalLogEntity::getStatus, StatusEnum.READY.getStatus()).or().eq(ApprovalLogEntity::getStatus, StatusEnum.ROLLBACK.getStatus()))
+                .and(i->i.eq(ApprovalLogEntity::getStatus, StatusEnum.READY.getStatus()).or().eq(ApprovalLogEntity::getStatus, StatusEnum.ROLLBACK.getStatus())
+                        .or().eq(ApprovalLogEntity::getStatus, StatusEnum.NORMAL.getStatus()))
                 .orderByDesc(ApprovalLogEntity::getNodeIndex, ApprovalLogEntity::getChildrenIdx).list();
         return CollectionUtils.isEmpty(list) ? new ApprovalLogEntity():list.get(0);
     }

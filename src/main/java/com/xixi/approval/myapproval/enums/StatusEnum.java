@@ -27,7 +27,7 @@ public enum StatusEnum {
      */
     ROLLBACK("ROLLBACK","驳回"),
     /**
-     * 回滚
+     *   只有复杂节点有该状态，在并发节点下，一个子节点过了审批，其他字节点为跳过
      */
     SKIP("SKIP","跳过")
     ;

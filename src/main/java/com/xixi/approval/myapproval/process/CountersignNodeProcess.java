@@ -88,6 +88,7 @@ public class CountersignNodeProcess extends CommonApprovalProcess {
 
     @Override
     public void recordApprovalLog(AbstractNode currentNode, ApprovalDTO approvalDTO,AbstractNode node) throws ApprovalException {
+        Boolean flag = false;
         List<ApprovalLogEntity> list = new ArrayList<>();
         CountersignNode father = (CountersignNode) currentNode;
         AbstractNode childrenNode = father.getNode();
@@ -97,6 +98,10 @@ public class CountersignNodeProcess extends CommonApprovalProcess {
         ApprovalLogEntity log = new ApprovalLogEntity("", ObjectUtil.isNull(node.getNextNode())?StatusEnum.NORMAL.getStatus():StatusEnum.READY.getStatus(), approvalDTO.getRelated(),currentNode.getNodeIdx(),
                 currentNode.getChildrenIdx(),approvalDTO.getApprovalUserDTO().getId(),approvalDTO.getType());
         list.add(log);
+        if(ObjectUtil.isNull(node.getNextNode()))  {
+            flag = true;
+        }
+
         while (childrenNode!=null){
             String status = StatusEnum.FUTURE.getStatus();
             if(childrenNode.getChildrenIdx()<=node.getChildrenIdx()){
@@ -111,7 +116,7 @@ public class CountersignNodeProcess extends CommonApprovalProcess {
         }
 
         AbstractNode nextNode = currentNode.getNextNode();
-        if(nextNode !=null){
+        if(nextNode !=null && flag){
             AbstractNodeProcess abstractNodeProcess = processMap.get(nextNode.getNodeType());
             list.addAll(abstractNodeProcess.saveNextNodeLog(nextNode, approvalDTO));
         }

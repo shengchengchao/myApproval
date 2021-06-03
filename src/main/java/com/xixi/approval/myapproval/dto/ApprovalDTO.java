@@ -1,5 +1,6 @@
 package com.xixi.approval.myapproval.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -11,12 +12,12 @@ import java.io.Serializable;
  */
 @Data
 public class ApprovalDTO implements Serializable {
-
+    @ApiModelProperty("关联id")
     private String related;
-
+    @ApiModelProperty("审批用户信息")
     private ApprovalUserDTO approvalUserDTO;
-
+    @ApiModelProperty("驳回原因")
     private String rollbackReason;
-
+    @ApiModelProperty("类型")
     private String type;
 }

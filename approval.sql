@@ -56,4 +56,17 @@ CREATE TABLE `APPROVAL_LOG` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+-- ----------------------------
+-- Table structure for TEST   注 该表是作为一个测试表(只包含主要参数)，可按业务需求进行扩容，
+-- ----------------------------
+DROP TABLE IF EXISTS `TEST`;
+CREATE TABLE `TEST` (
+  `ID` varchar(64) COLLATE utf8_bin NOT NULL COMMENT 'id',
+  `DEL_FLAG` tinyint(1) NOT NULL DEFAULT '0' COMMENT '删除标记',
+  `CREATE_TIME` datetime DEFAULT NULL COMMENT '创建时间',
+  `UPDATE_TIME` datetime DEFAULT NULL COMMENT '修改时间',
+  `VERSION` tinyint NOT NULL DEFAULT '0' COMMENT '版本',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
 

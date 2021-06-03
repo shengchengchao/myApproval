@@ -11,5 +11,5 @@ import com.xixi.approval.myapproval.entity.TestEntity;
 public interface TestService extends IService<TestEntity> {
 
 
-    public void test();
+
 }

@@ -32,14 +32,14 @@ public class ApprovalConfigServiceImpl extends ServiceImpl<ApprovalConfigMapper,
     public void setApprovalConfig(List<ApprovalConfigEntity> list) {
         List<ApprovalConfigEntity> res = new ArrayList<>();
         helper(res,list);
-        approvalConfigService.saveBatch(list);
+        approvalConfigService.saveBatch(res);
     }
 
     private void helper(List<ApprovalConfigEntity> res, List<ApprovalConfigEntity> list) {
-        res.stream().forEach(each->{
-            list.add(each);
+        list.stream().forEach(each->{
+            res.add(each);
             if(!CollectionUtils.isEmpty(each.getList())){
-                helper(each.getList(),list);
+                helper(res,each.getList());
             }
         });
 
